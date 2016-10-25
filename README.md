@@ -2,7 +2,7 @@
 Final Project for CS378
 
 Created by:
-    Nicholas Kantor
-    Ian Davis
-    William Yager
-    Christopher Lee
+* Nicholas Kantor
+* Ian Davis
+* William Yager
+* Christopher Lee
