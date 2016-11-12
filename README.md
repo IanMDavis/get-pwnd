@@ -11,8 +11,8 @@ python3, pip3
 
 ## Usage
 
-Currently the tool only emulates scanning the network, but does try
-to connect to the target machine by using ssh/telnet.
+Currently the tool only emulates scanning the network, 
+but does try to connect to the target machine by using ssh/telnet.
 
     python3 getpwnd.py config/scan-config.txt
 
