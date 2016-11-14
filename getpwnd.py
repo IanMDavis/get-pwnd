@@ -39,7 +39,7 @@ def main():
         creds_by_service = results_by_ip[ip]
         for service in creds_by_service:
             (port, login, password) = creds_by_service[service]
-            print("\"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
+            print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
                   (login, password, ip, service, port))
 
 def parse_scan_config_file(filename):
