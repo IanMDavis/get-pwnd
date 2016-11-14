@@ -1,20 +1,11 @@
-"""
-This module contains methods for testing access using the telnet and ssh protocols.
-
-The original intention was to use Hydra for both, but after extensive testing, it
-makes too many attempts to access a service and takes too long:
-hydra -F -l login -p password -t 1 telnet://localhost:23
-
-As a result, the Hydra interface turned into separate implementations of ssh and 
-telnet protocols.
-
-http://tools.kali.org/password-attacks/hydra
-"""
+'''
+This module contains methods for testing access using the telnet protocol
+'''
 
 import telnetlib
-from pexpect import pxssh
 
 def test_telnet(ip, port, credentials):
+    success = []
     for login in credentials:
         try:
             tn = telnetlib.Telnet(ip, port)
@@ -41,17 +32,6 @@ def test_telnet(ip, port, credentials):
         tn.close()
 
         if b"Last login" in read_str:
-            return (login, guessed_password)
-    return None
-
-def test_ssh(ip, port, credentials):
-    for login in credentials:
-        password = credentials[login]
-        ssh = pxssh.pxssh()
-        try:
-            ssh.login(ip, login, password)
-        except pxssh.ExceptionPxssh:
-            continue
-        ssh.logout()
-        return (login, password)
-    return None
+            #Append to keep track of multiple successes
+            success.append([login,password])
+    return success

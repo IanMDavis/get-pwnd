@@ -52,8 +52,6 @@ class Dispatcher:
                 if service in self.modules_dict:
                     tester_func = self.modules_dict[service]
                     port = services_dict[service]
-                    # NOTE: Only single credentials will be returned from
-                    # the tester_func even if a number of them succeeded.
                     res = pool.apply_async(tester_func, (ip, port, credentials))
                     results.append({
                         "ip": ip,
@@ -65,12 +63,15 @@ class Dispatcher:
         # Gather results.
         successful = {}
         for res in results:
-            login_pass = res["res"].get(timeout=30)
-            if login_pass is None:
+            login_results = res["res"].get(timeout=30)
+            if login_results is None:
                 continue
             ip = res["ip"]
             if ip not in successful:
                 successful[ip] = {}
-            successful[ip][res["service"]] = (res["port"], login_pass[0], login_pass[1])
-
+            for entry in login_results:
+                try:
+                    successful[ip][res["service"]].append((res["port"], entry[0], entry[1]))
+                except KeyError:
+                    successful[ip][res["service"]] = [(res["port"], entry[0], entry[1])]
         return successful

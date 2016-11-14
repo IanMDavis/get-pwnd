@@ -15,34 +15,43 @@ This code is a placeholder / proof of concept until Ian writes real main.
 import sys
 import nmap
 import jobs
-import modules.hydra as hydra
+import modules.ssh as ssh
+import modules.telnet as telnet
 
 def main():
     if len(sys.argv) < 2:
-        exit("Usage:\n    python3 getpwnd.py <scan_config_file>")
+        exit("Usage:\n\tpython3 getpwnd.py <scan_config_file>")
 
-    parsed_config = parse_scan_config_file(sys.argv[1])
-    services_by_ip = nmap.scan(parsed_config['targets_range'])
+    parsed_config = parse_config_file(sys.argv[1])
+    services_by_ip = nmap.scan(parsed_config['targets'])
     credentials = parsed_config['credentials']
 
     dispatcher = jobs.Dispatcher()
-    dispatcher.add_tester('ssh', hydra.test_ssh)
-    dispatcher.add_tester('telnet', hydra.test_telnet)
+    dispatcher.add_tester('ssh', ssh.test_ssh)
+    dispatcher.add_tester('telnet', telnet.test_telnet)
+    #Add more services here
 
     results_by_ip = dispatcher.run(services_by_ip, credentials)
 
-    if len(results_by_ip) == 0:
-        print("No matches found.")
-        return
+    #Success count
+    count = 0
 
     for ip in results_by_ip:
         creds_by_service = results_by_ip[ip]
         for service in creds_by_service:
-            (port, login, password) = creds_by_service[service]
-            print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
-                  (login, password, ip, service, port))
+            #Each successful login per service per IP
+            #(Fix for original bug where only one cred would be shown as success)
+            for entry in creds_by_service[service]:
+                (port, login, password) = entry
+                print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
+                    (login, password, ip, service, port))
+                count += 1
 
-def parse_scan_config_file(filename):
+    if count == 0:
+        print("No matches found.")
+        return
+
+def parse_config_file(filename):
     """
     Parses scan config file and retrieves all login:password pairs
     as well as targets_range.
@@ -64,7 +73,7 @@ def parse_scan_config_file(filename):
         # NOTE: If there are several identical logins, only the last will be written.
         creds_map[tmp[0]] = tmp[1]
     file_pointer.close()
-    return {"targets_range": targets_range, "credentials": creds_map}
+    return {"targets": targets_range, "credentials": creds_map}
 
 # Running the script from the command line.
 
