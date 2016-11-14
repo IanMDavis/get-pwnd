@@ -1,7 +1,5 @@
-reddavis.me
+35.161.245.143
 admin:password
 test:test
 user:123456
 tellnet:pr0s1s3
-gaz:haydenisgaz
-slis:nemiahismatt
