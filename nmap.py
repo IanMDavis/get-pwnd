@@ -20,6 +20,12 @@ def scan(targets_range):
         }
     """
     # TODO: Do real scanning and parse results (Nick).
-    return {
-        targets_range: {'ssh': 22, 'telnet': 23},
-    }
+
+    targets_dict = {}
+    targets = targets_range.split(",")
+    for target in targets:
+        targets_dict[target.strip(" ")] = {
+            'ssh': 22,
+            'telnet': 23,
+        }
+    return targets_dict

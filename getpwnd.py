@@ -56,7 +56,7 @@ def parse_scan_config_file(filename):
             continue
         # t[0] - username
         # t[1] - password
-        tmp = line.rstrip('\n').split(":")
+        tmp = line.rstrip('\n').split(":", 1)
         # In case there are invalid credentials.
         if len(tmp) != 2:
             print("Invalid credentials format: %s, must be login:password" % (line))

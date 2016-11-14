@@ -18,7 +18,7 @@ but does try to connect to the target machine by using ssh/telnet.
 
 ### Scan config sample
 
-    213.180.204.3
+    213.180.204.3, 213.180.204.4
     admin:password
     test:test
     user:123456
