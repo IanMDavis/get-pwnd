@@ -2,6 +2,7 @@
 This module is responsible for interaction with the nmap tool.
 """
 import nmap
+# EDIT THIS IF YOU ADD ANOTHER SERVICE!!!!!
 services = ["telnet", "ssh"]
 
 def scan(targets_range):
