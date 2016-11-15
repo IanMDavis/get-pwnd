@@ -13,7 +13,7 @@ This code is a placeholder / proof of concept until Ian writes real main.
 """
 
 import sys
-import nmap
+import nmap_parse as nmap
 import jobs
 import modules.ssh as ssh
 import modules.telnet as telnet

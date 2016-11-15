@@ -1,7 +1,8 @@
 """
-This module is responsible for interaction with the nmap tool. This is a placeholder
-with hardcoded ports until nmap scan / nmap results parsing is implemented.
+This module is responsible for interaction with the nmap tool.
 """
+import nmap
+services = ["telnet", "ssh"]
 
 def scan(targets_range):
     """
@@ -19,13 +20,18 @@ def scan(targets_range):
             {'192.168.1.2': {'smtp': 25}}
         }
     """
-    # TODO: Do real scanning and parse results (Nick).
-
     targets_dict = {}
     targets = targets_range.split(",")
     for target in targets:
-        targets_dict[target.strip(" ")] = {
-            'ssh': 22,
-            'telnet': 23,
-        }
+        nm = nmap.PortScanner()
+        nm.scan(hosts=target, arguments='-n -Pn')
+        for host in nm.all_hosts():
+            host_object = {}
+            for protocol in nm[host].all_protocols():
+                for port in nm[host][protocol].keys():
+                    info = nm[host][protocol][port]
+                    if (info['name'] in services and info['state'] == 'open'):
+                        host_object[info['name']] = port
+            targets_dict[host] = host_object
+
     return targets_dict
