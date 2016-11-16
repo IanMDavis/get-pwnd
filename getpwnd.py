@@ -62,7 +62,7 @@ def main():
     dispatcher.add_tester('ssh', ssh.test_ssh)
     dispatcher.add_tester('telnet', telnet.test_telnet)
     dispatcher.add_tester('http', http.test_http)
-    dispatcher.add_tester('websocket', http.test_http)
+    dispatcher.add_tester('http-proxy', http.test_http)
     #Add more services here
 
     results_by_ip = dispatcher.run(services_by_ip, credentials)
