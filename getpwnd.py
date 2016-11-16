@@ -84,8 +84,7 @@ def main():
             #(Fix for original bug where only one cred would be shown as success)
             for entry in creds_by_service[service]:
                 (port, login, password) = entry
-                print(Fore.GREEN + "\t\tProtocol: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password))
-                print (Style.RESET_ALL)
+                print(Fore.GREEN + "\t\tProtocol: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password) + Style.RESET_ALL)
                 # print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
                 #    (login, password, ip, service, port))
                 count += 1
