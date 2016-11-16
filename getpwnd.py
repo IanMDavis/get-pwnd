@@ -50,7 +50,7 @@ def main():
         print("!!! Scanning all 65535 ports. This will take some time. !!!")
     ports = None
     if args.p:
-        ports = open(args.p).read()
+        ports = args.p
 
     parsed_config = parse_config_file(args.f)
     print("Finding online systems...")
