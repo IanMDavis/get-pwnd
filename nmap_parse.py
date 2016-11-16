@@ -5,7 +5,7 @@ import nmap
 # EDIT THIS IF YOU ADD ANOTHER SERVICE!!!!!
 services = ["telnet", "ssh"]
 
-def scan(targets_range):
+def scan(targets_range, all_ports, ports):
     """
     Scans the specified IP / IP range using nmap, returns a dict of discovered ports
 
@@ -25,7 +25,13 @@ def scan(targets_range):
     targets = targets_range.split(",")
     for target in targets:
         nm = nmap.PortScanner()
-        nm.scan(hosts=target, arguments='-n -Pn')
+        if all_ports:
+            nm.scan(hosts=target, arguments='-sV -p-')
+        elif ports:
+            args = '-sV -p' + ports
+            nm.scan(hosts=target, arguments=args)
+        else:
+            nm.scan(hosts=target, arguments='-sV')
         for host in nm.all_hosts():
             host_object = {}
             for protocol in nm[host].all_protocols():

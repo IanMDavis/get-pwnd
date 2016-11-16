@@ -17,15 +17,39 @@ import nmap_parse as nmap
 import jobs
 import modules.ssh as ssh
 import modules.telnet as telnet
+import argparse
 
 def main():
-    if len(sys.argv) < 2:
-        exit("Usage:\n\tpython3 getpwnd.py <scan_config_file>")
 
-    parsed_config = parse_config_file(sys.argv[1])
-    services_by_ip = nmap.scan(parsed_config['targets'])
+    parser = argparse.ArgumentParser(description='Get Pwnd - Verify system credentials')
+    parser.add_argument('-f', required=True, metavar='--file', help='Required configuration file.')
+    parser.add_argument('-a', action='store_true', help='Scan all ports on all systems')
+    parser.add_argument('-p', metavar='--ports', help='Give csv for desired ports to be scanned')
+
+    args = parser.parse_args()
+
+    print("""
+         _____      _    ______                    _ 
+        |  __ \    | |   | ___ \                  | |
+        | |  \/ ___| |_  | |_/ /_      ___ __   __| |
+        | | __ / _ \ __| |  __/\ \ /\ / / '_ \ / _` |
+        | |_\ \  __/ |_  | |    \ V  V /| | | | (_| |
+         \____/\___|\__| \_|     \_/\_/ |_| |_|\__,_|
+         - Verify system credentials
+        """)
+
+    all_ports = False
+    if args.a:
+        all_ports = True
+        print("!!! Scanning all 65535 ports. This will take some time. !!!")
+
+    parsed_config = parse_config_file(args.f)
+    print("Finding online systems...")
+    print("Finding open ports...")
+    services_by_ip = nmap.scan(parsed_config['targets'], all_ports, args.p)
     credentials = parsed_config['credentials']
 
+    print("Verifying credentials...")
     dispatcher = jobs.Dispatcher()
     dispatcher.add_tester('ssh', ssh.test_ssh)
     dispatcher.add_tester('telnet', telnet.test_telnet)
@@ -33,18 +57,23 @@ def main():
 
     results_by_ip = dispatcher.run(services_by_ip, credentials)
 
+    
     #Success count
     count = 0
 
+    success = list()
+    print("Found matches:")
     for ip in results_by_ip:
+        print("\tIP: %s" % (ip))
         creds_by_service = results_by_ip[ip]
         for service in creds_by_service:
             #Each successful login per service per IP
             #(Fix for original bug where only one cred would be shown as success)
             for entry in creds_by_service[service]:
                 (port, login, password) = entry
-                print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
-                    (login, password, ip, service, port))
+                print("\t\tProtocol: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password))
+                # print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
+                #    (login, password, ip, service, port))
                 count += 1
 
     if count == 0:
