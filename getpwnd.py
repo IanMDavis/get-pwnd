@@ -9,6 +9,9 @@ usernames and passwords, and does the following:
 Usage:
     python3 getpwnd.py <scan_config_file>
 
+Suggested:
+    python3 getpwnd.py -f config/scan-config.txt -p config/ports.txt
+
 This code is a placeholder / proof of concept until Ian writes real main.
 """
 
@@ -17,6 +20,7 @@ import nmap_parse as nmap
 import jobs
 import modules.ssh as ssh
 import modules.telnet as telnet
+import modules.http as http
 import argparse
 
 def main():
@@ -24,7 +28,7 @@ def main():
     parser = argparse.ArgumentParser(description='Get Pwnd - Verify system credentials')
     parser.add_argument('-f', required=True, metavar='--file', help='Required configuration file.')
     parser.add_argument('-a', action='store_true', help='Scan all ports on all systems')
-    parser.add_argument('-p', metavar='--ports', help='Give csv for desired ports to be scanned')
+    parser.add_argument('-p', metavar='--ports', help='Give file path for comma-separated desired ports to be scanned')
 
     args = parser.parse_args()
 
@@ -42,17 +46,22 @@ def main():
     if args.a:
         all_ports = True
         print("!!! Scanning all 65535 ports. This will take some time. !!!")
+    ports = None
+    if args.p:
+        ports = open(args.p).read()
 
     parsed_config = parse_config_file(args.f)
     print("Finding online systems...")
     print("Finding open ports...")
-    services_by_ip = nmap.scan(parsed_config['targets'], all_ports, args.p)
+    services_by_ip = nmap.scan(parsed_config['targets'], all_ports, ports)
     credentials = parsed_config['credentials']
 
     print("Verifying credentials...")
     dispatcher = jobs.Dispatcher()
     dispatcher.add_tester('ssh', ssh.test_ssh)
     dispatcher.add_tester('telnet', telnet.test_telnet)
+    dispatcher.add_tester('http', http.test_http)
+    dispatcher.add_tester('websocket', http.test_http)
     #Add more services here
 
     results_by_ip = dispatcher.run(services_by_ip, credentials)

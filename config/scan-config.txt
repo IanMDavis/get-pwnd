@@ -1,4 +1,4 @@
-reddavis.met
+localhost
 admin:password
 test:test
 user:123456
