@@ -77,7 +77,7 @@ def main():
                 count += 1
 
     if count == 0:
-        print("No matches found.")
+        print("\tNo valid credentials found.")
         return
 
 def parse_config_file(filename):

@@ -1,4 +1,4 @@
-35.161.245.143, reddavis.me
+reddavis.met
 admin:password
 test:test
 user:123456
