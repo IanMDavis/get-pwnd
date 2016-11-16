@@ -10,7 +10,7 @@ def test_http(ip, port, credentials):
     success = []
     for login in credentials:
         password = credentials[login]
-        print (login)
+
         try:
             res = requests.get('http://'+str(ip)+':'+str(port)+'/', auth=HTTPBasicAuth(login,password))
             if res.status_code == 200:

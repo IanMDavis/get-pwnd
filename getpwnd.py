@@ -10,7 +10,7 @@ Usage:
     python3 getpwnd.py <scan_config_file>
 
 Suggested:
-    python3 getpwnd.py -f config/scan-config.txt -p config/ports.txt
+    python3 getpwnd.py -f config/scan-config.txt -p port#,port#
 
 This code is a placeholder / proof of concept until Ian writes real main.
 """
@@ -57,7 +57,7 @@ def main():
     print("Finding open ports...")
     services_by_ip = nmap.scan(parsed_config['targets'], all_ports, ports)
     credentials = parsed_config['credentials']
-
+    
     print("Verifying credentials...")
     dispatcher = jobs.Dispatcher()
     dispatcher.add_tester('ssh', ssh.test_ssh)
