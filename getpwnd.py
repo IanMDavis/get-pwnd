@@ -30,7 +30,7 @@ def main():
     parser = argparse.ArgumentParser(description='Get Pwnd - Verify system credentials')
     parser.add_argument('-f', required=True, metavar='--file', help='Required configuration file.')
     parser.add_argument('-a', action='store_true', help='Scan all ports on all systems')
-    parser.add_argument('-p', metavar='--ports', help='Give file path for comma-separated desired ports to be scanned')
+    parser.add_argument('-p', metavar='--ports', help='List of comma separated ports (ex: -p 22,23)')
 
     args = parser.parse_args()
 
