@@ -73,7 +73,7 @@ def main():
     
     #Success count
     count = 0
-
+    results_by_ip = format_results(results_by_ip)
     success = list()
     print("Found matches:")
     for ip in results_by_ip:
@@ -84,9 +84,7 @@ def main():
             #(Fix for original bug where only one cred would be shown as success)
             for entry in creds_by_service[service]:
                 (port, login, password) = entry
-                print(Fore.GREEN + "\t\tProtocol: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password) + Style.RESET_ALL)
-                # print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
-                #    (login, password, ip, service, port))
+                print(Fore.GREEN + "\t\tService: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password) + Style.RESET_ALL)
                 count += 1
 
     if count == 0:
@@ -118,6 +116,37 @@ def parse_config_file(filename):
     return {"targets": targets_range, "credentials": creds_map}
 
 # Running the script from the command line.
+
+def format_results(ip_results):
+    max_service = max_port = max_username = max_password = 0
+    for ip in ip_results:
+        for service in ip_results[ip]:
+            for entry in ip_results[ip][service]:
+                (port, login, password) = entry
+                max_service = max(len(service), max_service)
+                max_port = max(len(str(port)), max_port)
+                max_username = max(len(login), max_username)
+                max_password = max(len(password), max_password)
+    
+    for ip in ip_results:
+        ip_stuff={}
+        for service in ip_results[ip]:
+            service_results = []
+            for entry in ip_results[ip][service]:
+                (port, login, password) = entry
+                if (len(service) < max_service):
+                    service = service + (max_service - len(service))*" " 
+                if (len(str(port)) < max_port):
+                    port = str(port) + (max_port - len(str(port)))*" "
+                if (len(login) < max_username):
+                    login = login + (max_username - len(login))*" "
+                if (len(password) < max_password):
+                    password = password + (max_password - len(password))*" "
+                service_results.append((port,login,password))
+            ip_stuff[service] = service_results
+        ip_results[ip] = ip_stuff
+
+    return ip_results
 
 if __name__ == "__main__":
     main()
