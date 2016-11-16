@@ -22,6 +22,7 @@ import modules.ssh as ssh
 import modules.telnet as telnet
 import modules.http as http
 import argparse
+from colorama import Fore, Back, Style
 
 def main():
 
@@ -32,7 +33,7 @@ def main():
 
     args = parser.parse_args()
 
-    print("""
+    print(Fore.RED + """
          _____      _    ______                    _ 
         |  __ \    | |   | ___ \                  | |
         | |  \/ ___| |_  | |_/ /_      ___ __   __| |
@@ -40,7 +41,7 @@ def main():
         | |_\ \  __/ |_  | |    \ V  V /| | | | (_| |
          \____/\___|\__| \_|     \_/\_/ |_| |_|\__,_|
          - Verify system credentials
-        """)
+        """ + Style.RESET_ALL)
 
     all_ports = False
     if args.a:
@@ -80,13 +81,14 @@ def main():
             #(Fix for original bug where only one cred would be shown as success)
             for entry in creds_by_service[service]:
                 (port, login, password) = entry
-                print("\t\tProtocol: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password))
+                print(Fore.GREEN + "\t\tProtocol: %s\tPort: %s\tUsername: %s\tPassword: %s" % (service, port, login, password))
+                print (Style.RESET_ALL)
                 # print("\n \"%s\" + \"%s\" was successful on host %s running %s (port %s)" %
                 #    (login, password, ip, service, port))
                 count += 1
 
     if count == 0:
-        print("\tNo valid credentials found.")
+        print(Fore.RED + "\tNo valid credentials found." + Style.RESET_ALL)
         return
 
 def parse_config_file(filename):
@@ -106,7 +108,7 @@ def parse_config_file(filename):
         tmp = line.rstrip('\n').split(":", 1)
         # In case there are invalid credentials.
         if len(tmp) != 2:
-            print("Invalid credentials format: %s, must be login:password" % (line))
+            print(Back.RED + "Invalid credentials format: %s, must be login:password" % (line.strip()) + Style.RESET_ALL)
             continue
         # NOTE: If there are several identical logins, only the last will be written.
         creds_map[tmp[0]] = tmp[1]

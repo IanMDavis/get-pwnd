@@ -26,12 +26,12 @@ def scan(targets_range, all_ports, ports):
     for target in targets:
         nm = nmap.PortScanner()
         if all_ports:
-            nm.scan(hosts=target, arguments='-sV -p-')
+            nm.scan(hosts=target, arguments='-n -Pn -p-')
         elif ports:
-            args = '-sV -p' + ports
+            args = '-n -Pn -p' + ports
             nm.scan(hosts=target, arguments=args)
         else:
-            nm.scan(hosts=target, arguments='-sV')
+            nm.scan(hosts=target, arguments='-n -Pn')
         for host in nm.all_hosts():
             host_object = {}
             for protocol in nm[host].all_protocols():
