@@ -21,6 +21,7 @@ import jobs
 import modules.ssh as ssh
 import modules.telnet as telnet
 import modules.http as http
+import modules.https as https
 import modules.smb as smb
 import argparse
 from colorama import Fore, Back, Style
@@ -66,6 +67,7 @@ def main():
     dispatcher.add_tester('websocket', http.test_http)
     dispatcher.add_tester('smb', smb.test_smb)
     dispatcher.add_tester('microsoft-ds', smb.test_smb)
+    dispatcher.add_tester('https', https.test_https)
     #Add more services here
 
     results_by_ip = dispatcher.run(services_by_ip, credentials)
