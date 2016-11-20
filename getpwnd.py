@@ -63,7 +63,7 @@ def main():
     dispatcher.add_tester('ssh', ssh.test_ssh)
     dispatcher.add_tester('telnet', telnet.test_telnet)
     dispatcher.add_tester('http', http.test_http)
-    dispatcher.add_tester('http-proxy', http.test_http)
+    dispatcher.add_tester('websocket', http.test_http)
     dispatcher.add_tester('smb', smb.test_smb)
     dispatcher.add_tester('microsoft-ds', smb.test_smb)
     #Add more services here
