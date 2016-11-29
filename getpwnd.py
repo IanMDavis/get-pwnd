@@ -62,6 +62,7 @@ def main():
     dispatcher.add_tester('websocket', http.test_http)
     dispatcher.add_tester('smb', smb.test_smb)
     dispatcher.add_tester('microsoft-ds', smb.test_smb)
+    dispatcher.add_tester('netbios-ssn', smb.test_smb)
     dispatcher.add_tester('https', https.test_https)
     #Add more services here
 

@@ -3,7 +3,7 @@ This module is responsible for interaction with the nmap tool.
 """
 import nmap
 # EDIT THIS IF YOU ADD ANOTHER SERVICE!!!!!
-services = ["telnet", "ssh", "http", "websocket", "smb", "microsoft-ds", "https"]
+services = ["telnet", "ssh", "http", "websocket", "smb", "microsoft-ds", "https", "netbios-ssn"]
 
 def scan(targets_range, all_ports, ports):
     """

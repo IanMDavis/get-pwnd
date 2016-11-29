@@ -8,20 +8,21 @@ from nmb import NetBIOS
 
 def test_smb(ip, port, credentials):
     success = []
-    for login in credentials:
-        password = credentials[login]
-        nb = NetBIOS.NetBIOS(broadcast=False)
-        try:
-            names = nb.queryIPForName(ip,port,timeout=1)
-            if names == None or names == []:
-                break
-            name = names[0]
-            conn = SMBConnection(login, password, "PwnieXpress", name)
-            if conn.connect(ip,port=port,timeout=1):
+    nb = NetBIOS.NetBIOS(broadcast=False)
+    try:
+        # names = nb.queryIPForName(ip,139,timeout=10)
+        # if names == None or names == []:
+        #     name = ""
+        # else:
+        #     name = names[0]
+        for login in credentials:
+            password = credentials[login]
+            conn = SMBConnection(login, password, "PwnieXpress", "")
+            result = conn.connect(ip,port=port,timeout=30)
+            if result:
                 success.append([login,password])
                 conn.close()
-        except Exception as e:
-            print(e)
-            break
-        nb.close()
+    except Exception as e:
+        print(e)
+    nb.close()
     return success

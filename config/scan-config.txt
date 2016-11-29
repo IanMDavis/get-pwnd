@@ -6,3 +6,4 @@ tellnet:pr0s1s3
 gaz:haydenisgaz
 slis:nemiah
 blah:blah
+ubuntu:samba
