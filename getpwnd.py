@@ -7,12 +7,7 @@ usernames and passwords, and does the following:
    for every result from the previous step.
 
 Usage:
-    python3 getpwnd.py <scan_config_file>
-
-Suggested:
     python3 getpwnd.py -f config/scan-config.txt -p port#,port#
-
-This code is a placeholder / proof of concept until Ian writes real main.
 """
 
 import sys

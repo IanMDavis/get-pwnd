@@ -1,4 +1,4 @@
-reddavis.me, 35.161.245.143, 0.0.0.0
+reddavis.me, 35.161.245.143, 127.0.0.1
 admin:password
 test:test
 user:123456
